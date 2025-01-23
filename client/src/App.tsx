@@ -8,7 +8,6 @@ import { Dashboard } from './pages/Dashboard';
 import { Login } from './pages/Login';
 import { Register } from './pages/Register';
 
-// Initialize QueryClient with default options
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -18,11 +17,10 @@ const queryClient = new QueryClient({
   },
 });
 
-// Protected Route wrapper component
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-  const user = useAuthStore((state) => state.user);
+  const {isAuthenticated} = useAuthStore();
   
-  if (!user) {
+  if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
   }
   
@@ -37,12 +35,10 @@ const App = () => {
           <Header />
           <main className="flex-grow">
             <Routes>
-              {/* Public routes */}
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               
-              {/* Protected routes */}
               <Route
                 path="/dashboard"
                 element={
@@ -52,7 +48,6 @@ const App = () => {
                 }
               />
               
-              {/* Catch all route */}
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </main>

@@ -5,20 +5,22 @@ export interface User {
 }
 
 export interface Book {
-  id: string;
-  title: string;
-  author: string;
-  description: string;
-  isPublic: boolean;
-  createdAt: string;
-  updatedAt: string;
+  id?: string;
+  userId?: string;
+  title?: string;
+  author?: string;
+  readingStatus?: string[];
+  rating?: number;
+  notes?: string;
+}
+
+export interface RegisterData {
+  username: string;
+  email: string;
+  password: string;
 }
 
 export interface LoginData {
   email: string;
   password: string;
-}
-
-export interface RegisterData extends LoginData {
-  name: string;
 }
