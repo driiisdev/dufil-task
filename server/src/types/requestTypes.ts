@@ -11,8 +11,3 @@ export interface IPaginationParams {
   sortBy?: string;
   sortOrder?: 'asc' | 'desc';
 }
-
-export interface ISearchParams {
-  title?: string;
-  author?: string;
-}

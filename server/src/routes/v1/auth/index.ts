@@ -10,11 +10,14 @@ const router = Router();
  * @swagger
  * /api/v1/register:
  *   post:
- *     security: []
- *     summary: Register a new user
- *     description: Allows a new user to create an account by providing the required information
  *     tags:
  *       - Authentication
+ * 
+ *     summary: Register a new user
+ *     description: Allows a new user to create an account by providing the required information
+ * 
+ *     security: []
+ * 
  *     requestBody:
  *       required: true
  *       content:
@@ -96,68 +99,21 @@ router.post('/login', loginValidator, validate as NextFunction, login);
 
 /**
  * @swagger
- * /api/v1/logout:
- *   post:
- *     summary: Logout the user
- *     description: Logs out the authenticated user and invalidates their session or token.
- *     security:
- *       - bearerAuth: []  # This indicates that the route is secured by a bearer token (JWT)
- *     tags:
- *       - Authentication
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               userId:
- *                 type: string
- *                 example: 25
- *     responses:
- *       200:
- *         description: Successfully logged out
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: Logout successful
- *       401:
- *         description: Unauthorized, user is not authenticated or token is invalid
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: Unauthorized
- *       500:
- *         description: Internal Server Error, something went wrong during logout
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: Internal Server Error
- */
-router.post('/logout', authenticateToken, logout);
-
-/**
- * @swagger
+ * components:
+ *   securitySchemes:
+ *     BearerAuth:
+ *       type: http
+ *       scheme: bearer
+ *       bearerFormat: JWT
+ *
  * /api/v1/refresh-token:
  *   post:
- *     security:
- *       - bearerAuth: []
- *     summary: Refresh the user's authentication token
- *     description: Provides a new access token when the user's current token is expired or close to expiring.
  *     tags:
  *       - Authentication
+ *     summary: Refresh the user's authentication token
+ *     description: Provides a new access token when the user's current token is expired or close to expiring.
+ *     security:
+ *       - BearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -207,5 +163,66 @@ router.post('/logout', authenticateToken, logout);
  *                   example: Internal Server Error
  */
 router.post('/refresh-token', refreshToken);
+
+/**
+ * @swagger
+ * components:
+ *   securitySchemes:
+ *     BearerAuth:
+ *       type: http
+ *       scheme: bearer
+ *       bearerFormat: JWT
+ *
+ * /api/v1/logout:
+ *   post:
+ *     tags:
+ *       - Authentication
+ *     summary: Logout the user
+ *     description: Logs out the authenticated user and invalidates their session or token.
+ *     security:
+ *       - BearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               userId:
+ *                 type: string
+ *                 example: 25
+ *     responses:
+ *       200:
+ *         description: Successfully logged out
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Logout successful
+ *       401:
+ *         description: Unauthorized, user is not authenticated or token is invalid
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Unauthorized
+ *       500:
+ *         description: Internal Server Error, something went wrong during logout
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Internal Server Error
+ */
+router.post('/logout', authenticateToken, logout);
 
 export default router;

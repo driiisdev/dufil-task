@@ -1,9 +1,9 @@
 export interface IBook {
   id?: string;
-  userId?: string;
   title?: string;
   author?: string;
+  isPublic?: boolean
   readingStatus?: 'read' | 'reading' | 'want-to-read';
-  rating?: number;
-  notes?: string;
+  rating: string;
+  comments?: string;
 }

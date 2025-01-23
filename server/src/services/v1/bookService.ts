@@ -1,6 +1,7 @@
 import { Op } from 'sequelize';
 import models from '../../models';
-import { IPaginationParams, ISearchParams } from '../../types/requestTypes';
+import { IPaginationParams } from '../../types/requestTypes';
+import createHttpError from 'http-errors';
 import { GetPublicBooksResponse,SearchPublicBooksResponse, GetUserBooksResponse, GetBookResponse, CreateBookResponse, UpdateBookResponse, DeleteBookResponse } from '../../types/responseTypes';
 import { IBook } from '../../types/bookTypes';
 
@@ -8,147 +9,190 @@ const { Book } = models;
 
 
 export class BookService {
+
   async getPublicBooks(pagination: IPaginationParams): Promise<GetPublicBooksResponse> {
-    const { page = 1, limit = 10, sortBy, sortOrder } = pagination;
-
-    const offset = (page - 1) * limit;
-    const books = await Book.findAndCountAll({
-      where: { isPublic: true },
-      order: [[sortBy || 'createdAt', sortOrder || 'desc']],
-      limit,
-      offset,
-    });
-
-    const Books = books.rows.map((book) => book.toJSON() as IBook);
-
-    return {
-      books: Books,
-      total: books.count,
-      totalPages: Math.ceil(books.count / limit),
-      currentPage: page,
-    };
+    try {
+      const { page = 1, limit = 10, sortBy, sortOrder } = pagination;
+      const offset = (page - 1) * limit;
+  
+      const books = await Book.findAndCountAll({
+        where: { isPublic: true },
+        order: [[sortBy || 'createdAt', sortOrder || 'desc']],
+        limit,
+        offset,
+      });
+  
+      const Books = books.rows.map((book) => ({
+        id: book.id!,
+        title: book.title!,
+        author: book.author!,
+        readingStatus: book.readingStatus!,
+        rating: book.rating!,
+        comments: book.comment!,
+      }));
+  
+      return {
+        books: Books,
+        total: books.count,
+        totalPages: Math.ceil(books.count / limit),
+        currentPage: page,
+      };
+    } catch (error) {
+      throw createHttpError(500, 'Error retrieving public books');
+    }
   }
-
-  async searchPublicBooks(pagination: IPaginationParams, search: ISearchParams): Promise<SearchPublicBooksResponse> {
-    const { page = 1, limit = 10, sortBy, sortOrder } = pagination;
-    const { title, author } = search;
-
-    const offset = (page - 1) * limit;
+  
+  async searchPublicBooks(
+    pagination: IPaginationParams,
+    title: string
+  ): Promise<SearchPublicBooksResponse> {
+    try {
+      const { page = 1, limit = 10, sortBy, sortOrder } = pagination;
+      const offset = (page - 1) * limit;
     
-    const searchConditions = [];
-    if (title) {
-      searchConditions.push({ title: { [Op.iLike]: `%${title}%` } });
+      const whereClause = title 
+        ? { 
+            isPublic: true, 
+            title: { [Op.iLike]: `%${title}%` } 
+          }
+        : { 
+            isPublic: true 
+          };
+  
+      const books = await Book.findAndCountAll({
+        where: whereClause,
+        order: [[sortBy || 'createdAt', sortOrder || 'desc']],
+        limit,
+        offset,
+      });
+    
+      const Books = books.rows.map((book) => ({
+        id: book.id!,
+        title: book.title!,
+        author: book.author!,
+        readingStatus: book.readingStatus!,
+        rating: book.rating!,
+        comments: book.comment!,
+      }));
+    
+      return {
+        books: Books,
+        total: books.count,
+        totalPages: Math.ceil(books.count / limit),
+        currentPage: page,
+      };
+    } catch (error) {
+      throw createHttpError(500, 'Error searching public books');
     }
-    if (author) {
-      searchConditions.push({ author: { [Op.iLike]: `%${author}%` } });
-    }
-
-    const whereClause: any = {
-      isPublic: true,
-    };
-
-    if (searchConditions.length > 0) {
-      whereClause[Op.or] = searchConditions;
-    }
-
-    const books = await Book.findAndCountAll({
-      where: whereClause,
-      order: [[sortBy || 'createdAt', sortOrder || 'desc']],
-      limit,
-      offset,
-    });
-
-    const Books = books.rows.map((book) => book.toJSON() as IBook);
-
-    return {
-      books: Books,
-      total: books.count,
-      totalPages: Math.ceil(books.count / limit),
-      currentPage: page,
-    };
   }
 
-  async getUserBooks(userId: string, pagination: IPaginationParams, search: ISearchParams): Promise<GetUserBooksResponse> {
-    const { page = 1, limit = 10, sortBy, sortOrder } = pagination;
-    const { title, author } = search;
-
-    const offset = (page - 1) * limit;
-
-    const searchConditions = [];
-    if (title) {
-      searchConditions.push({ title: { [Op.iLike]: `%${title}%` } });
+  async getUserBooks(userId: string, pagination: IPaginationParams, search: string): Promise<GetUserBooksResponse> {
+    try {
+      const { page = 1, limit = 10, sortBy, sortOrder } = pagination;
+      const offset = (page - 1) * limit;
+  
+      const books = await Book.findAndCountAll({
+        where: {
+          userId,
+          ...(search ? { title: { [Op.iLike]: `%${search}%` } } : {}),
+        },
+        order: [[sortBy || 'createdAt', sortOrder || 'desc']],
+        limit,
+        offset,
+      });
+  
+      const Books = books.rows.map((book) => ({
+        id: book.id!,
+        title: book.title!,
+        author: book.author!,
+        readingStatus: book.readingStatus!,
+        rating: book.rating!,
+        comments: book.comment!,
+      }));
+  
+      return {
+        books: Books,
+        total: books.count,
+        totalPages: Math.ceil(books.count / limit),
+        currentPage: page,
+      };
+    } catch (error) {
+      throw createHttpError(500, 'Error retrieving user books');
     }
-    if (author) {
-      searchConditions.push({ author: { [Op.iLike]: `%${author}%` } });
-    }
-
-    const books = await Book.findAndCountAll({
-      where: {
-        userId,
-        ...(searchConditions.length > 0 && { [Op.or]: searchConditions }),
-      },
-      order: [[sortBy || 'createdAt', sortOrder || 'desc']],
-      limit,
-      offset,
-    });
-
-    const Books = books.rows.map((book) => book.toJSON() as IBook);
-
-    return ({
-      books: Books,
-      total: books.count,
-      totalPages: Math.ceil(books.count / limit),
-      currentPage: page,
-    });
-  }  
+  } 
 
   async getBook(bookId: string, userId?: string): Promise<GetBookResponse> {
     const book = await Book.findByPk(bookId);
-
+  
     if (!book) {
-      throw new Error('Book not found');
+      throw createHttpError(404, 'Book not found');
     }
-
+  
     if (!book.isPublic && book.userId !== userId) {
-      throw new Error('You do not have permission to view this book');
+      throw createHttpError(403, 'You do not have permission to view this book');
     }
-
-    return ({book: book.toJSON() as IBook});
+  
+    return {
+      book: {
+        id: book.id!,
+        title: book.title!,
+        author: book.author!,
+        readingStatus: book.readingStatus!,
+        rating: book.rating!,
+        comments: book.comment!,
+      }
+    };
   }
 
-  async createBook(userId: string, bookData: Partial<IBook>): Promise<CreateBookResponse>  {
-    const newBook = await Book.create({ ...bookData, userId });
-    return ({book: newBook.toJSON() as IBook});
+  async createBook(userId: string, bookData: Partial<IBook>): Promise<CreateBookResponse> {
+    try {
+      const newBook = await Book.create({ 
+        ...bookData, 
+        userId,
+        isPublic: bookData.isPublic || false 
+      });
+      return {book: newBook.toJSON() as IBook };
+    } catch (error) {
+      throw createHttpError(400, 'Error creating book');
+    }
   }
 
   async updateBook(bookId: string, userId: string, bookData: Partial<IBook>): Promise<UpdateBookResponse> {
     const book = await Book.findByPk(bookId);
-
+  
     if (!book) {
-      throw new Error('Book not found');
+      throw createHttpError(404, 'Book not found');
     }
-
+  
     if (book.userId !== userId) {
-      throw new Error('You do not have permission to update this book');
+      throw createHttpError(403, 'You do not have permission to update this book');
     }
-
-    await book.update(bookData);
-    return ({book: book.toJSON() as IBook});
+  
+    try {
+      await book.update(bookData);
+      return { book: book.toJSON() as IBook };
+    } catch (error) {
+      throw createHttpError(500, 'Error updating book');
+    }
   }
 
   async deleteBook(bookId: string, userId: string): Promise<DeleteBookResponse> {
     const book = await Book.findByPk(bookId);
-
+  
     if (!book) {
-      throw new Error('Book not found');
+      throw createHttpError(404, 'Book not found');
     }
-
+  
     if (book.userId !== userId) {
-      throw new Error('You do not have permission to delete this book');
+      throw createHttpError(403, 'You do not have permission to delete this book');
     }
-
-    await book.destroy();
-
-    return({message: 'Book Deleted'})
+  
+    try {
+      await book.destroy();
+      return { message: 'Book Deleted' };
+    } catch (error) {
+      throw createHttpError(500, 'Error deleting book');
+    }
   }
+
 }

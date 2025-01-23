@@ -27,10 +27,6 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      picture: {
-        type: Sequelize.STRING,
-        allowNull: true
-      },
       isPublic: {
         type: Sequelize.BOOLEAN,
         defaultValue: true,

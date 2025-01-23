@@ -8,11 +8,11 @@ const router = Router();
  * @swagger
  * /api/v1/:
  *   get:
+ *     tags:
+ *       - Default
  *     security: []
  *     summary: Check API health
  *     description: Returns a message indicating the API is healthy
- *     tags:
- *       - Default
  *     responses:
  *       200:
  *         description: API is healthy
@@ -29,7 +29,7 @@ router.get('/', (req, res) => {
   res.status(200).json({ message: 'API is healthy!' });
 });
 
-router.use('/api/v1', authRoutes);
-router.use('/api/v1', bookRoutes);
+router.use('/', authRoutes);
+router.use('/', bookRoutes);
 
 export default router;

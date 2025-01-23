@@ -10,7 +10,7 @@ export interface Book {
   title?: string;
   author?: string;
   readingStatus?: string[];
-  rating?: number;
+  rating?: string;
   notes?: string;
 }
 

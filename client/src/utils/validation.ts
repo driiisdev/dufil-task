@@ -58,7 +58,7 @@ export const bookSchema = yup.object({
     .oneOf(['read', 'reading', 'want-to-read'])
     .optional(),
   rating: yup
-    .number()
+    .string()
     .min(1, 'Rating must be at least 1')
     .max(5, 'Rating must be at most 5')
     .optional(),

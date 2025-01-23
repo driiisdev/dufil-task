@@ -1,10 +1,10 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { ICustomRequest } from '../../types/requestTypes';
 import { BookService } from '../../services/v1/bookService';
 
 const bookService = new BookService();
 
-export const getAllPublicBooks = async (req: Request, res: Response) => {
+export const getAllPublicBooks = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const pagination = {
       page: parseInt(req.query.page as string) || 1,
@@ -12,19 +12,14 @@ export const getAllPublicBooks = async (req: Request, res: Response) => {
       sortBy: req.query.sortBy as string,
       sortOrder: req.query.sortOrder as 'asc' | 'desc',
     };
-
-    const result = await bookService.getPublicBooks(pagination);
-    res.json(result);
+    const response = await bookService.getPublicBooks(pagination);
+    res.json(response);
   } catch (error) {
-    if (error instanceof Error) {
-      res.status(500).json({ message: error.message });
-    } else {
-      res.status(500).json({ message: 'Internal Server Error' });
-    }
+    next(error)
   }
 };
 
-export const searchPublicBooks = async (req: Request, res: Response) => {
+export const searchPublicBooks = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const pagination = {
       page: parseInt(req.query.page as string) || 1,
@@ -32,24 +27,15 @@ export const searchPublicBooks = async (req: Request, res: Response) => {
       sortBy: req.query.sortBy as string,
       sortOrder: req.query.sortOrder as 'asc' | 'desc',
     };
-
-    const search = {
-      title: req.query.title as string,
-      author: req.query.author as string,
-    };
-
-    const result = await bookService.searchPublicBooks(pagination, search);
-    res.json(result);
+    const search = req.query.title as string;
+    const response = await bookService.searchPublicBooks(pagination, search);
+    res.status(200).json({ message: "book searched", data: response});
   } catch (error) {
-    if (error instanceof Error) {
-      res.status(500).json({ message: error.message });
-    } else {
-      res.status(500).json({ message: 'Internal Server Error' });
-    }
+    next(error)
   }
 };
 
-export const getUserBooks = async (req: ICustomRequest, res: Response) => {
+export const getUserBooks = async (req: ICustomRequest, res: Response, next: NextFunction) => {
   try {
     const userId = req.user!.id;
     const pagination = {
@@ -58,78 +44,53 @@ export const getUserBooks = async (req: ICustomRequest, res: Response) => {
       sortBy: req.query.sortBy as string,
       sortOrder: req.query.sortOrder as 'asc' | 'desc',
     };
-
-    const search = {
-      title: req.query.title as string,
-      author: req.query.author as string,
-    };
-
-    const result = await bookService.getUserBooks(userId, pagination, search);
-    res.json(result);
+    const search = req.query.title as string;
+    const response = await bookService.getUserBooks(userId, pagination, search);
+    res.status(200).json({message: "Books found", data: response});
   } catch (error) {
-    if (error instanceof Error) {
-      res.status(500).json({ message: error.message });
-    } else {
-      res.status(500).json({ message: 'Internal Server Error' });
-    }
+    next(error);
   }
 };
 
-export const getBook = async (req: ICustomRequest, res: Response) => {
+export const getBook = async (req: ICustomRequest, res: Response, next: NextFunction) => {
   try {
     const userId = req.user?.id;
     const { id } = req.params;
     const book = await bookService.getBook(id, userId);
-    res.json(book);
+    res.status(200).json({message: "Book found", data: book});
   } catch (error) {
-    if (error instanceof Error) {
-      res.status(404).json({ message: error.message });
-    } else {
-      res.status(404).json({ message: 'Not Found' });
-    }
+    next(error)
   }
 };
 
-export const createBook = async (req: ICustomRequest, res: Response) => {
+export const createBook = async (req: ICustomRequest, res: Response, next: NextFunction) => {
   try {
     const userId = req.user?.id;
     const book = await bookService.createBook(userId as string, req.body);
-    res.status(201).json(book);
+    res.status(201).json({message: "Book created successfully", data: book});
   } catch (error) {
-    if (error instanceof Error) {
-      res.status(400).json({ message: error.message });
-    } else {
-      res.status(400).json({ message: 'Bad Request' });
-    }
+    next(error)
   }
 };
 
-export const updateBook = async (req: ICustomRequest, res: Response) => {
+export const updateBook = async (req: ICustomRequest, res: Response, next: NextFunction) => {
   try {
     const userId = req.user!.id;
     const { id } = req.params;
     const book = await bookService.updateBook(id, userId, req.body);
-    res.json(book);
+    res.status(201).json({message: "Book updated successfully", data: book});
   } catch (error) {
-    if (error instanceof Error) {
-      res.status(404).json({ message: error.message });
-    } else {
-      res.status(404).json({ message: 'Not Found' });
-    }
+    next(error)
   }
 };
 
-export const deleteBook = async (req: ICustomRequest, res: Response) => {
+export const deleteBook = async (req: ICustomRequest, res: Response, next: NextFunction) => {
   try {
     const userId = req.user?.id;
     const { id } = req.params;
     await bookService.deleteBook(id, userId as string);
     res.status(204).send();
   } catch (error) {
-    if (error instanceof Error) {
-      res.status(404).json({ message: error.message });
-    } else {
-      res.status(404).json({ message: 'Not Found' });
-    }
+    next(error)
   }
 };

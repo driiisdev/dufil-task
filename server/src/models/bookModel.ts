@@ -7,10 +7,9 @@ export class Book extends Model {
   public userId!: string;
   public title!: string;
   public author!: string;
-  public picture!: string | null;
   public isPublic!: boolean;
   public readingStatus!: 'read' | 'reading' | 'want-to-read';
-  public rating!: number | null;
+  public rating!: string | null;
   public comment!: string | null;
   public createdAt!: Date;
   public updatedAt!: Date;
@@ -38,10 +37,6 @@ Book.init(
     author: {
       type: DataTypes.STRING,
       allowNull: false,
-    },
-    picture: {
-      type: DataTypes.STRING,
-      allowNull: true
     },
     isPublic: {
       type: DataTypes.BOOLEAN,

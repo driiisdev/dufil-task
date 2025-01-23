@@ -1,20 +1,18 @@
 export interface ICreateBookDto {
   title: string;
   author: string;
-  picture?: string;
   isPublic: boolean;
   readingStatus: ReadingStatus;
-  rating?: number;
+  rating?: string;
   comment?: string;
 }
 
 export interface IUpdateBookDto {
   title?: string;
   author?: string;
-  picture?: string;
   isPublic?: boolean;
   readingStatus?: ReadingStatus;
-  rating?: number;
+  rating?: string;
   comment?: string;
 }
 

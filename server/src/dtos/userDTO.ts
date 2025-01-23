@@ -4,7 +4,7 @@ export interface UserDTO {
   email: string;
 }
 
-export interface UserRegisterResponseDTO {
+export interface RegisterResponseDTO {
   id: string;
   username: string;
   email: string;
