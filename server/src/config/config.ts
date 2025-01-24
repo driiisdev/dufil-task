@@ -1,3 +1,6 @@
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 type Environment = 'development' | 'test' | 'production';
 

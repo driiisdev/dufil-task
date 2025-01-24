@@ -1,5 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import { HttpError } from 'http-errors';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 export const errorHandler = (err: HttpError, req: Request, res: Response, next: NextFunction) => {
   if (process.env.NODE_ENV !== 'production') {

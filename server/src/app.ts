@@ -10,6 +10,9 @@ import swaggerUi from 'swagger-ui-express';
 import { syncDatabase } from './config/db';
 import { errorHandler } from './middleware/v1/errorMiddleware';
 import v1Routes from './routes/v1';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const app: Application = express();
 
