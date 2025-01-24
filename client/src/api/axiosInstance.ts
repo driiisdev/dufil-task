@@ -5,7 +5,7 @@ import { TokenResponse } from '../types/responseTypes';
 const Base_URL = import.meta.env.VITE_API_URL;
 
 const Axios = axios.create({
-  baseURL: Base_URL|| 'http://localhost:8080',
+  baseURL: Base_URL|| 'https://server-xrkn.onrender.com/',
 });
 
 Axios.interceptors.request.use((config) => {
