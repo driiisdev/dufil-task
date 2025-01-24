@@ -8,10 +8,6 @@ RUN npm install
 
 COPY . .
 
-RUN npm run build
-
-WORKDIR /app/server/dist
-
 EXPOSE 8080
 
 CMD ["npm", "run", "start"]
