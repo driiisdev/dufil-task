@@ -1,8 +1,9 @@
 import axios from 'axios';
 import { useAuthStore } from '../store/useAuthStore';
+import { TokenResponse } from '../types/responseTypes';
 
 const Axios = axios.create({
-  baseURL: 'localhost:8080',
+  baseURL: 'http://localhost:8080',
 });
 
 Axios.interceptors.request.use((config) => {
@@ -17,13 +18,24 @@ Axios.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
-    if (error.response.status === 401 && !originalRequest._retry) {
+
+    if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
-      const refreshedToken = await Axios.post('/api/v1/refresh-token');
-      useAuthStore.getState().setAuth(refreshedToken.data.token);
-      axios.defaults.headers.common['Authorization'] = `Bearer ${refreshedToken.data.token}`;
-      return Axios(originalRequest);
+
+      try {
+        const refreshedTokenResponse = await Axios.post<TokenResponse>('/api/v1/refresh-token');
+        const refreshedToken = refreshedTokenResponse.data.data.accessToken;
+
+        useAuthStore.getState().setAuth(refreshedToken);
+        Axios.defaults.headers.common['Authorization'] = `Bearer ${refreshedToken}`;
+
+        return Axios(originalRequest);
+      } catch (refreshError) {
+        useAuthStore.getState().logout();
+        return Promise.reject(refreshError);
+      }
     }
+
     return Promise.reject(error);
   }
 );

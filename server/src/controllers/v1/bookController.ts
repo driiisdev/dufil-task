@@ -13,7 +13,10 @@ export const getAllPublicBooks = async (req: Request, res: Response, next: NextF
       sortOrder: req.query.sortOrder as 'asc' | 'desc',
     };
     const response = await bookService.getPublicBooks(pagination);
-    res.json(response);
+    res.status(200).json({
+      message: "Books fetch successful",
+      data: response
+    });
   } catch (error) {
     next(error)
   }
@@ -28,8 +31,11 @@ export const searchPublicBooks = async (req: Request, res: Response, next: NextF
       sortOrder: req.query.sortOrder as 'asc' | 'desc',
     };
     const search = req.query.title as string;
-    const response = await bookService.searchPublicBooks(pagination, search);
-    res.status(200).json({ message: "book searched", data: response});
+    const books = await bookService.searchPublicBooks(pagination, search);
+    res.status(200).json({ 
+      message: "book searched", 
+      data: books
+    });
   } catch (error) {
     next(error)
   }
@@ -45,8 +51,11 @@ export const getUserBooks = async (req: ICustomRequest, res: Response, next: Nex
       sortOrder: req.query.sortOrder as 'asc' | 'desc',
     };
     const search = req.query.title as string;
-    const response = await bookService.getUserBooks(userId, pagination, search);
-    res.status(200).json({message: "Books found", data: response});
+    const books = await bookService.getUserBooks(userId, pagination, search);
+    res.status(200).json({
+      message: "Books found", 
+      data: books
+    });
   } catch (error) {
     next(error);
   }
@@ -57,7 +66,10 @@ export const getBook = async (req: ICustomRequest, res: Response, next: NextFunc
     const userId = req.user?.id;
     const { id } = req.params;
     const book = await bookService.getBook(id, userId);
-    res.status(200).json({message: "Book found", data: book});
+    res.status(200).json({
+      message: "Book found",
+      data: book
+    });
   } catch (error) {
     next(error)
   }
@@ -67,7 +79,10 @@ export const createBook = async (req: ICustomRequest, res: Response, next: NextF
   try {
     const userId = req.user?.id;
     const book = await bookService.createBook(userId as string, req.body);
-    res.status(201).json({message: "Book created successfully", data: book});
+    res.status(201).json({
+      message: "Book created successfully",
+      data: book
+    });
   } catch (error) {
     next(error)
   }
@@ -78,7 +93,10 @@ export const updateBook = async (req: ICustomRequest, res: Response, next: NextF
     const userId = req.user!.id;
     const { id } = req.params;
     const book = await bookService.updateBook(id, userId, req.body);
-    res.status(201).json({message: "Book updated successfully", data: book});
+    res.status(201).json({
+      message: "Book updated successfully",
+      data: book
+    });
   } catch (error) {
     next(error)
   }
@@ -89,7 +107,9 @@ export const deleteBook = async (req: ICustomRequest, res: Response, next: NextF
     const userId = req.user?.id;
     const { id } = req.params;
     await bookService.deleteBook(id, userId as string);
-    res.status(204).send();
+    res.status(204).send({
+      message: "book deleted successfully"
+    });
   } catch (error) {
     next(error)
   }

@@ -1,20 +1,15 @@
+import { ILoginCredentials, IRegisterData } from '../types/authTypes';
+import { LoginResponse, RegisterResponse, SuccessResponse } from '../types/responseTypes';
 import Axios from './axiosInstance';
 
-export interface AuthResponse {
-  token: string;
-  user: User;
-}
 
 export const authAPI = {
-  register: (data: RegisterData) => 
-    Axios.post<AuthResponse>('/register', data),
-  
-  login: (data: LoginData) => 
-    Axios.post<AuthResponse>('/login', data),
-  
+  register: (data: IRegisterData) => 
+    Axios.post<RegisterResponse>('/api/v1/register', data),
+
+  login: (data: ILoginCredentials) => 
+    Axios.post<LoginResponse>('/api/v1/login', data),
+
   logout: () => 
-    Axios.post('/logout'),
-  
-  refreshToken: () => 
-    Axios.post<AuthResponse>('/refresh-token'),
+    Axios.post<SuccessResponse>('/api/v1/logout'),
 };

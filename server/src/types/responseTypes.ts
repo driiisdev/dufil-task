@@ -2,23 +2,23 @@ import { IBook } from "./bookTypes";
 
 export interface GetPublicBooksResponse {
   books: IBook[];
-  total: number;
-  totalPages: number;
-  currentPage: number;
+  total: string;
+  totalPages: string;
+  currentPage: string;
 }
 
 export interface SearchPublicBooksResponse {
   books: IBook[];
-  total: number;
-  totalPages: number;
-  currentPage: number;
+  total: string;
+  totalPages: string;
+  currentPage: string;
 }
 
 export interface GetUserBooksResponse {
   books: IBook[];
-  total: number;
-  totalPages: number;
-  currentPage: number;
+  total: string;
+  totalPages: string;
+  currentPage: string;
 }
 
 export interface GetBookResponse {

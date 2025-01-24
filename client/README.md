@@ -35,7 +35,7 @@ src/
 │   ├── Dashboard.tsx         // User's personal library page
 │   ├── Login.tsx             // Login page
 │   ├── Register.tsx          // Registration page
-├── hooks/
+├── store/
 │   ├── useAuthStore.ts       // Zustand store for authentication state
 │   ├── useBooksStore.ts      // Zustand store for managing book state
 │   └── useModal.ts           // Custom hook to handle modal state

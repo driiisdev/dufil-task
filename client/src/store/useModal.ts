@@ -1,9 +1,11 @@
-import { useState } from 'react';
+import { create } from 'zustand';
 
-export const useModal = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const open = () => setIsOpen(true);
-  const close = () => setIsOpen(false);
-  
-  return { isOpen, open, close };
-};
+interface ModalState {
+  isCreateModalOpen: boolean;
+  setIsCreateModalOpen: (isOpen: boolean) => void;
+}
+
+export const useModalStore = create<ModalState>((set) => ({
+  isCreateModalOpen: false,
+  setIsCreateModalOpen: (isOpen) => set({ isCreateModalOpen: isOpen }),
+}));

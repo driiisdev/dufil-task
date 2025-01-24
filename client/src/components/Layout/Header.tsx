@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { useAuthStore } from '../../store/useAuthStore';
 
 export const Header = () => {
-  const { user, clearAuth } = useAuthStore();
+  const { isAuthenticated, clearAuth } = useAuthStore();
 
   return (
     <header className="bg-white shadow-sm">
@@ -11,14 +11,14 @@ export const Header = () => {
           <Link to="/" className="text-gray-700 hover:text-gray-900">
             Home
           </Link>
-          {user && (
+          {isAuthenticated && (
             <Link to="/dashboard" className="text-gray-700 hover:text-gray-900">
               Dashboard
             </Link>
           )}
         </nav>
         <div className="flex space-x-4">
-          {user ? (
+          {isAuthenticated ? (
             <button
               onClick={clearAuth}
               className="text-gray-700 hover:text-gray-900"

@@ -13,7 +13,8 @@ import v1Routes from './routes/v1';
 
 const app: Application = express();
 
-const baseUrl = process.env.BASE_URL || 'http://localhost:8080';
+const baseUrl = process.env.BASE_URL || "http://localhost:8080";
+const FrontendOrigin = process.env.FrontendOrigin || "http://localhost:5413";
 
 const swaggerOptions = {
   definition: {
@@ -36,9 +37,10 @@ const swaggerSpec = swaggerJSDoc(swaggerOptions);
 
 app.use(
   cors({
-    origin: "*",
+    origin: FrontendOrigin,
     credentials: true,
-    methods: "GET,PUT,PATCH,POST,DELETE",
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
   })
 );
 app.use(helmet());

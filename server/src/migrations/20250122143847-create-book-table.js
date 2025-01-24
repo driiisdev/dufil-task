@@ -36,7 +36,7 @@ module.exports = {
         allowNull: false
       },
       rating: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING,
         allowNull: true,
         validate: {
           min: 1,

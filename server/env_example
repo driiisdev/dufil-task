@@ -1,6 +1,8 @@
 NODE_ENV=development
 PORT=8080
 JWT_SECRET=JWT_SECRET
+BASE_URL=BASE_URL
+FrontendOrigin=FrontendOrigin
 
 DEV_DB_USERNAME=your_dev_username
 DEV_DB_PASSWORD=your_dev_password

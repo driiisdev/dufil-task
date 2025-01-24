@@ -9,27 +9,31 @@ interface JwtPayload {
   id: string;
 }
 
-export const authenticateToken: RequestHandler = (req, res, next) => {
-  (async () => {
-    const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1];
+export const authenticateToken: RequestHandler = async (req, res, next) => {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
 
-    if (!token) {
-      return res.status(401).json({ message: 'Authentication token required' });
+  if (!token) {
+    res.status(401).json({ message: 'Authentication token required' });
+    return;
+  }
+
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET as string) as JwtPayload;
+    const user = await User.findByPk(decoded.id);
+
+    if (!user) {
+      res.status(401).json({ error: 'User not found' });
+      return;
     }
 
-    try {
-      const decoded = jwt.verify(token, JWT_SECRET as string) as JwtPayload;
-      const user = await User.findByPk(decoded.id);
-
-      if (!user) {
-        return res.status(401).json({ error: 'User not found' });
-      }
-
-      (req as ICustomRequest).user = user;
-      next();
-    } catch (error) {
-      return res.status(403).json({ message: 'Invalid token' });
+    (req as ICustomRequest).user = user;
+    next();
+  } catch (error) {
+    if (error instanceof jwt.TokenExpiredError) {
+      res.status(403).json({ message: 'Token expired' });
+    } else {
+      res.status(403).json({ message: 'Invalid token' });
     }
-  })();
+  }
 };

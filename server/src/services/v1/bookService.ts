@@ -28,14 +28,14 @@ export class BookService {
         author: book.author!,
         readingStatus: book.readingStatus!,
         rating: book.rating!,
-        comments: book.comment!,
+        comment: book.comment!,
       }));
   
       return {
         books: Books,
-        total: books.count,
-        totalPages: Math.ceil(books.count / limit),
-        currentPage: page,
+        total: books.count.toString(),
+        totalPages: Math.ceil(books.count / limit).toString(),
+        currentPage: page.toString(),
       };
     } catch (error) {
       throw createHttpError(500, 'Error retrieving public books');
@@ -72,14 +72,14 @@ export class BookService {
         author: book.author!,
         readingStatus: book.readingStatus!,
         rating: book.rating!,
-        comments: book.comment!,
+        comment: book.comment!,
       }));
     
       return {
         books: Books,
-        total: books.count,
-        totalPages: Math.ceil(books.count / limit),
-        currentPage: page,
+        total: books.count.toString(),
+        totalPages: Math.ceil(books.count / limit).toString(),
+        currentPage: page.toString(),
       };
     } catch (error) {
       throw createHttpError(500, 'Error searching public books');
@@ -107,14 +107,14 @@ export class BookService {
         author: book.author!,
         readingStatus: book.readingStatus!,
         rating: book.rating!,
-        comments: book.comment!,
+        comment: book.comment!,
       }));
   
       return {
         books: Books,
-        total: books.count,
-        totalPages: Math.ceil(books.count / limit),
-        currentPage: page,
+        total: books.count.toString(),
+        totalPages: Math.ceil(books.count / limit).toString(),
+        currentPage: page.toString(),
       };
     } catch (error) {
       throw createHttpError(500, 'Error retrieving user books');
@@ -139,7 +139,7 @@ export class BookService {
         author: book.author!,
         readingStatus: book.readingStatus!,
         rating: book.rating!,
-        comments: book.comment!,
+        comment: book.comment!,
       }
     };
   }

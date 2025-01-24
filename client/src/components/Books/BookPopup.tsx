@@ -1,11 +1,11 @@
 import { useForm } from 'react-hook-form';
-import { Book } from '../../types';
+import { IBook } from '../../types/bookTypes';
 
 interface BookPopupProps {
-  book?: Book;
+  book?: IBook;
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (data: Partial<Book>) => void;
+  onSubmit: (data: Partial<IBook>) => void;
   onDelete?: () => void;
   mode: 'view' | 'create' | 'edit';
 }
@@ -31,7 +31,7 @@ export const BookPopup = ({
           <div>
             <h2 className="text-xl font-bold mb-4">{book?.title}</h2>
             <p className="text-gray-600 mb-2">By {book?.author}</p>
-            <p>{book?.description}</p>
+            <p>{book?.comment}</p>
           </div>
         ) : (
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
@@ -50,9 +50,40 @@ export const BookPopup = ({
               />
             </div>
             <div>
+              <select
+                {...register('readingStatus', { required: 'Reading status is required' })}
+                className="w-full p-2 border rounded"
+              >
+                <option value="read">Read</option>
+                <option value="reading">Reading</option>
+                <option value="want-to-read">Want to Read</option>
+              </select>
+            </div>
+
+            <div>
+              <input
+                {...register('rating', {
+                  required: 'Rating is required',
+                  min: {
+                    value: 1,
+                    message: 'Rating must be between 1 and 5',
+                  },
+                  max: {
+                    value: 5,
+                    message: 'Rating must be between 1 and 5',
+                  },
+                })}
+                type="number"
+                min="1"
+                max="5"
+                placeholder="Rating (1-5)"
+                className="w-full p-2 border rounded"
+              />
+            </div>
+            <div>
               <textarea
-                {...register('description')}
-                placeholder="Description"
+                {...register('comment')}
+                placeholder="please give your comment"
                 className="w-full p-2 border rounded"
               />
             </div>
@@ -83,7 +114,7 @@ export const BookPopup = ({
         )}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
+          className="absolute text-3xl h-10 w-10 border rounded-lg top-4 right-4 bg-red-500 hover:bg-red-700 text-white"
         >
           ×
         </button>
