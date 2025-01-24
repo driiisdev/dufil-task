@@ -17,7 +17,7 @@ dotenv.config();
 const app: Application = express();
 
 const baseUrl = process.env.BASE_URL || "http://localhost:8080";
-const FrontendOrigin = process.env.FrontendOrigin || "https://dufil-task.vercel.app/";
+const FrontendOrigin = process.env.FrontendOrigin || "https://dufil-task.vercel.app";
 
 const swaggerOptions = {
   definition: {
