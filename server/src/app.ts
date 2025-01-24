@@ -14,7 +14,7 @@ import v1Routes from './routes/v1';
 const app: Application = express();
 
 const baseUrl = process.env.BASE_URL || "http://localhost:8080";
-const FrontendOrigin = process.env.FrontendOrigin || "http://localhost:5413";
+const FrontendOrigin = process.env.FrontendOrigin || "http://localhost:5173";
 
 const swaggerOptions = {
   definition: {
