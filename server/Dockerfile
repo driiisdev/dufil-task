@@ -6,7 +6,9 @@ COPY package*.json ./
 
 RUN npm install
 
-COPY . . && ls
+COPY . .
+
+RUN ls
 
 EXPOSE 8080
 
