@@ -40,7 +40,7 @@ const swaggerSpec = swaggerJSDoc(swaggerOptions);
 
 app.use(
   cors({
-    origin: FrontendOrigin,
+    origin: "*",
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
