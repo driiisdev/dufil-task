@@ -1,6 +1,6 @@
 FROM node:18
 
-WORKDIR /app/server
+WORKDIR /usr/src/app
 
 COPY package*.json ./
 
@@ -14,4 +14,4 @@ WORKDIR /app/server/dist
 
 EXPOSE 8080
 
-CMD ["node", "index.js"]
+CMD ["npm", "run", "start"]
