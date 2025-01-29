@@ -15,35 +15,39 @@ This is a backend application built with Node.js and TypeScript. The application
 ```markdown
 src/
 ├── config/
-│   ├── config.js            // Database configuration
-│   ├── config.ts            // Application configuration
-│   └── db.ts                // Database connection
+│   ├── config.js    // Database configuration
+│   ├── config.ts    // Application configuration
+│   └── db.ts     // Database connection
 ├── controllers/
 │   ├── v1/
-│   │   ├── authController.ts // Handles authentication-related APIs
-│   │   └── bookController.ts // Handles book-related APIs
+│   │   ├── authController.ts    // Handles authentication-related APIs
+│   │   └── bookController.ts    // Handles book-related APIs
 ├── dtos/
-│   ├── bookDTO.ts           // Data Transfer Object for books
-│   └── userDTO.ts           // Data Transfer Object for users
+│   ├── bookDTO.ts      // Data Transfer Object for books
+│   └── userDTO.ts      // Data Transfer Object for users
 ├── middleware/
 │   ├── v1/
-│   │   ├── authMiddleware.ts // Authentication middleware
-│   │   ├── errorMiddleware.ts // Centralized error handling
-│   │   └── validationMiddleware.ts // Request validation middleware
+│   │   ├── authMiddleware.ts    // Authentication middleware
+│   │   ├── errorMiddleware.ts   // Centralized error handling
+│   │   └── validationMiddleware.ts    // Request validation middleware
 ├── models/
-│   ├── bookModel.ts         // Sequelize model for books
-│   ├── index.ts             // Sequelize model index file
-│   ├── tokenModel.ts        // Sequelize model for tokens
-│   └── userModel.ts         // Sequelize model for users
+│   ├── bookModel.ts    // Sequelize model for books
+│   ├── index.ts     // Sequelize model index file
+│   ├── tokenModel.ts      // Sequelize model for tokens
+│   └── userModel.ts    // Sequelize model for users
 ├── routes/
 │   ├── v1/
 │   │   ├── auth/
-│   │   │   └── index.ts     // Routes for authentication APIs
+│   │   │   └── index.ts      // Routes for authentication APIs
 │   │   ├── book/
-│   │   │   └── index.ts     // Routes for book APIs
-│   │   └── index.ts         // Main route file
-├── seeders/ (empty dir)
-├── migrations/ (empty dir)
+│   │   │   └── index.ts      // Routes for book APIs
+│   │   └── index.ts    // Main route file
+├── seeders/
+│   │   └── 20250127225110-create-user.js
+├── migrations/
+│   │   ├── 20250121120901-create-users-table.js
+│   │   ├── 20250122143829-create-token-table.js
+│   │   └── 20250122143847-create-book-table.js
 ├── services/
 │   ├── v1/
 │   │   ├── authService.ts   // Authentication service
@@ -54,16 +58,16 @@ src/
 │   ├── responseTypes.ts     // Type definitions for responses
 │   └── userTypes.ts         // Type definitions for users
 ├── utils/
-│   ├── validators/
-│   │   ├── authValidator.ts // Validation logic for authentication
-│   │   └── bookValidators.ts // Validation logic for books
-├── tests/ (empty dir)
-├── .env_example             // Example environment variables file
-├── .sequelizerc             // Sequelize configuration file
-├── docker-compose.yml       // Docker Compose configuration
-├── Dockerfile               // Dockerfile for containerization
-├── app.ts                   // Main application file
-└── server.ts                // Server entry point
+│   └── validators/
+│       ├── authValidator.ts     // Validation logic for authentication
+│       └── bookValidators.ts    // Validation logic for books
+├ tests/ (empty dir)
+├ .env_example             // Example environment variables file
+├ .sequelizerc             // Sequelize configuration file
+├ docker-compose.yml       // Docker Compose configuration
+├ Dockerfile               // Dockerfile for containerization
+├ app.ts                   // Main application file
+└ server.ts                // Server entry point
 ```
 
 ## Installation

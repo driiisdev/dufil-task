@@ -1,12 +1,24 @@
 # Dufil Task - Library Management App
 
-Dufil Task is a library management application designed to help manage books, users, and related resources. The project is split into two main parts: a **client** for the user interface and a **server** for the backend API.
+Dufil Task is a library management application designed to help manage books, users, and related resources. The project is split into two main parts: **client** for the user interface and **server** for the backend API.
 
-## Features
+## User Stories
 
-- **Book Management**: Users can add, update, and delete books from the library.
-- **User Management**: Handle users with different roles for managing the library content.
-- **Dockerized**: The client and server are both Dockerized for easy deployment and local development.
+### Public Access (Non-User)
+- A non-registered user should be able to:
+  - View public books on the home page.
+  - Search for public books.
+  - View details of a specific public book.
+
+### Authenticated User
+- A registered user should be able to:
+  - Perform all actions available to non-users.
+  - Access a personal dashboard after signing in.
+  - See a list of their own books on the dashboard.
+  - View details of a specific book they own.
+  - Create a new book entry.
+  - Update an existing book.
+  - Delete a book they own.
 
 ## Setup
 
