@@ -14,7 +14,7 @@ const router = Router();
  *       - Authentication
  * 
  *     summary: Register a new user
- *     description: Allows a new user to create an account by providing the required information
+ *     description: Allows a new user to create an account by providing the required information.
  * 
  *     security: []
  * 
@@ -24,6 +24,10 @@ const router = Router();
  *         application/json:
  *           schema:
  *             type: object
+ *             required:
+ *               - username
+ *               - email
+ *               - password
  *             properties:
  *               username:
  *                 type: string
@@ -34,22 +38,64 @@ const router = Router();
  *               password:
  *                 type: string
  *                 example: "password123"
+ * 
  *     responses:
  *       201:
- *         description: User successfully registered
+ *         description: Created
  *         content:
  *           application/json:
  *             schema:
  *               type: object
  *               properties:
- *                 id:
+ *                 message:
  *                   type: string
- *                 username:
- *                   type: string
- *                 email:
- *                   type: string
+ *                   example: "Register Successful"
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     user:
+ *                       type: object
+ *                       properties:
+ *                         id:
+ *                           type: string
+ *                           format: uuid
+ *                           example: "533ac2d1-3444-4fa1-a0c8-78d54b8a310d"
+ *                         username:
+ *                           type: string
+ *                           example: "newuser"
+ *                         email:
+ *                           type: string
+ *                           example: "newuser@example.com"
  *       400:
- *         description: Bad request (validation error)
+ *         description: Bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Invalid request format"
+ *       409:
+ *         description: Conflict
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Conflict detected"
+ *       500: 
+ *         description: Internal Server Error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Internal Server Error"
  */
 router.post('/register', registerValidator, validate as NextFunction, register);
 
@@ -57,43 +103,99 @@ router.post('/register', registerValidator, validate as NextFunction, register);
  * @swagger
  * /api/v1/login:
  *   post:
- *     security: []
  *     summary: User login
- *     description: Authenticates a user with their email and password
+ *     description: Authenticates a user with their email and password.
+ * 
  *     tags:
  *       - Authentication
+ * 
+ *     security: []
+ * 
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
  *             type: object
+ *             required:
+ *               - email
+ *               - password
  *             properties:
  *               email:
  *                 type: string
+ *                 format: email
  *                 example: "user@example.com"
  *               password:
  *                 type: string
+ *                 format: password
  *                 example: "password123"
+ * 
  *     responses:
  *       200:
- *         description: Successfully authenticated
+ *         description: OK
  *         content:
  *           application/json:
  *             schema:
  *               type: object
  *               properties:
- *                 token:
+ *                 message:
  *                   type: string
- *                 user:
+ *                   example: "Login Successful"
+ *                 data:
  *                   type: object
  *                   properties:
- *                     id:
+ *                     user:
+ *                       type: object
+ *                       properties:
+ *                         id:
+ *                           type: string
+ *                           format: uuid
+ *                           example: "a4ec58cc-d40f-43b5-a80e-a682103d8b88"
+ *                         username:
+ *                           type: string
+ *                           example: "newuser"
+ *                         email:
+ *                           type: string
+ *                           format: email
+ *                           example: "user@example.com"
+ *                     accessToken:
  *                       type: string
- *                     username:
+ *                       description: JWT access token for authentication
+ *                       example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImE0ZWM1OGNjLWQ0MGYtNDNiNS1hODBlLWE2ODIx"
+ *                     refreshToken:
  *                       type: string
+ *                       description: JWT refresh token to obtain a new access token
+ *                       example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImE0ZWM1OGNjLWQ0MGYtNDNiNS1hODBlLWE2ODIxMDNkOGI4O"
+ *       400:
+ *         description: Bad Request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Invalid request format"
  *       401:
- *         description: Invalid credentials
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Unauthorized access"
+ *       500: 
+ *         description: Internal Server Error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Internal Server Error"
  */
 router.post('/login', loginValidator, validate as NextFunction, login);
 
@@ -110,57 +212,75 @@ router.post('/login', loginValidator, validate as NextFunction, login);
  *   post:
  *     tags:
  *       - Authentication
+ * 
  *     summary: Refresh the user's authentication token
  *     description: Provides a new access token when the user's current token is expired or close to expiring.
+ * 
  *     security:
  *       - BearerAuth: []
+ * 
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
  *             type: object
+ *             required:
+ *               - refreshToken
  *             properties:
  *               refreshToken:
  *                 type: string
  *                 description: The refresh token provided to the user
- *                 example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+ *                 example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"
+ * 
  *     responses:
  *       200:
- *         description: Token refreshed successfully
+ *         description: OK
  *         content:
  *           application/json:
  *             schema:
  *               type: object
  *               properties:
- *                 token:
+ *                 message:
  *                   type: string
- *                   description: The new access token
- *                   example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
- *                 refreshToken:
- *                   type: string
- *                   description: The new refresh token
- *                   example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+ *                   example: "Token refreshed successfully"
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     accessToken:
+ *                       type: string
+ *                       description: The new access token
+ *                       example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"
  *       401:
- *         description: Invalid or expired refresh token
+ *         description: Unauthorized
  *         content:
  *           application/json:
  *             schema:
  *               type: object
  *               properties:
- *                 error:
+ *                 message:
  *                   type: string
- *                   example: Invalid or expired refresh token
- *       500:
- *         description: Internal Server Error, something went wrong during token refresh
+ *                   example: "Unauthorized access"
+ *       403:
+ *         description: Forbidden
  *         content:
  *           application/json:
  *             schema:
  *               type: object
  *               properties:
- *                 error:
+ *                 message:
  *                   type: string
- *                   example: Internal Server Error
+ *                   example: "Access denied"
+ *       500: 
+ *         description: Internal Server Error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Internal Server Error"
  */
 router.post('/refresh-token', refreshToken);
 
@@ -177,10 +297,13 @@ router.post('/refresh-token', refreshToken);
  *   post:
  *     tags:
  *       - Authentication
+ * 
  *     summary: Logout the user
  *     description: Logs out the authenticated user and invalidates their session or token.
+ * 
  *     security:
  *       - BearerAuth: []
+ * 
  *     requestBody:
  *       required: true
  *       content:
@@ -190,10 +313,12 @@ router.post('/refresh-token', refreshToken);
  *             properties:
  *               userId:
  *                 type: string
- *                 example: 25
+ *                 format: uuid
+ *                 example: "a4a376f0-667f-4807-99cb-95ddd80860ac"
+ * 
  *     responses:
  *       200:
- *         description: Successfully logged out
+ *         description: Ok
  *         content:
  *           application/json:
  *             schema:
@@ -203,7 +328,7 @@ router.post('/refresh-token', refreshToken);
  *                   type: string
  *                   example: Logout successful
  *       401:
- *         description: Unauthorized, user is not authenticated or token is invalid
+ *         description: Unauthorized
  *         content:
  *           application/json:
  *             schema:
@@ -211,9 +336,9 @@ router.post('/refresh-token', refreshToken);
  *               properties:
  *                 error:
  *                   type: string
- *                   example: Unauthorized
+ *                   example: Unauthorized access
  *       500:
- *         description: Internal Server Error, something went wrong during logout
+ *         description: Internal Server Error
  *         content:
  *           application/json:
  *             schema:
