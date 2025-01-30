@@ -1,5 +1,4 @@
-# Dufil-Task
-# Library Management - Client Application
+# Frontend Application
 
 ## Overview
 This is a frontend application built with React, TypeScript, and Vite. The application allows users to view public books, manage their personal book collections, and perform authentication tasks such as login and registration.
@@ -22,13 +21,13 @@ src/
 ├── components/
 │   ├── Auth/
 │   │   ├── LoginForm.tsx     // Login form component
-│   │   ├── RegisterForm.tsx  // Registration form component
+│   │   └── RegisterForm.tsx  // Registration form component
 │   ├── Books/
-│   │   ├── BookCard.tsx      // Displays book information (public and personal)
+│   │   ├── BookCard.tsx      // Displays book information
 │   │   ├── BookPopup.tsx     // Popup for viewing, creating, updating, and deleting books
-│   │   ├── SearchBox.tsx     // Search input box component
+│   │   └── SearchBox.tsx     // Search input box component
 │   ├── Layout/
-│   │   ├── Header.tsx        // Navigation bar (Home, Dashboard links, + sign button)
+│   │   ├── Header.tsx        // Navigation bar
 │   │   └── Footer.tsx        // Footer component
 ├── pages/
 │   ├── Home.tsx              // Public books homepage
@@ -38,14 +37,21 @@ src/
 ├── store/
 │   ├── useAuthStore.ts       // Zustand store for authentication state
 │   ├── useBooksStore.ts      // Zustand store for managing book state
-│   └── useModal.ts           // Custom hook to handle modal state
+│   ├── useSearchStore.ts     // Zustand store for managing search state
+│   ├── useModal.ts           // Custom hook to handle modal state
 ├── utils/
-│   ├── constants.ts          // Application constants (e.g., API endpoints)
+│   ├── constants.ts          // Application constants
 │   ├── validation.ts         // Form validation schemas using Yup
-│   ├── helpers.ts            // Utility functions (e.g., date formatting)
+│   └── helpers.ts            // Utility functions
 ├── App.tsx                   // Main application component
 ├── main.tsx                 // Entry point for React application
 └── index.css             // Global CSS using TailwindCSS
+│
+├ tests/ (empty dir)
+├ env_example             // Example environment variables file
+├ index.html             // Sequelize configuration file
+├ docker-compose.yml       // Docker Compose configuration
+└ Dockerfile               // Dockerfile for containerization
 ```
 
 ## Installation
@@ -73,13 +79,14 @@ Ensure you have the following installed:
    # or
    yarn dev
    ```
-4. Open the application in your browser at [http://localhost:3000](http://localhost:3000).
+4. Open the application in your browser at [http://localhost:5173](http://localhost:5173).
 
 ## Scripts
-- **`npm run dev`**: Starts the development server.
-- **`npm run build`**: Builds the application for production.
+- **`npm install`**: Installs dependencies.
 - **`npm run lint`**: Lints the project files.
+- **`npm run dev`**: Starts the development server.
 - **`npm run preview`**: Previews the production build locally.
+- **`npm run build`**: Builds the application for production.
 
 ## Dependencies
 Key dependencies include:

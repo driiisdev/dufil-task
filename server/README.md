@@ -11,13 +11,36 @@ This is a backend application built with Node.js and TypeScript. The application
 - **Error Handling**: Centralized error handling middleware.
 - **API Documentation**: Swagger for API documentation.
 
+## API Endpoints
+
+### Default Endpoints
+- `GET /api/v1/` - Check API health
+
+### Authentication Endpoints
+- `POST /api/v1/register` - Register a new user
+- `POST /api/v1/login` - User login
+- `POST /api/v1/logout` - Logout the user
+- `POST /api/v1/refresh-token` - Refresh the user access token
+
+### Public Book Endpoints
+- `GET /api/v1/books/public` - Get all public books with pagination
+- `GET /api/v1/books/public/search` - Search public books by title
+- `GET /api/v1/books/public/:id` - Get a specific public book
+
+### Personal Library Endpoints
+- `GET /api/v1/books` - Get all books for the authenticated user
+- `POST /api/v1/books` - Create a new book
+- `GET /api/v1/books/:id` - Get a specific book for the authenticated user
+- `PATCH /api/v1/books/:id` - Update a book
+- `DELETE /api/v1/books/:id` - Delete a book
+
 ## Folder Structure
 ```markdown
 src/
 ├── config/
 │   ├── config.js    // Database configuration
 │   ├── config.ts    // Application configuration
-│   └── db.ts     // Database connection
+│   └── db.ts        // Database connection
 ├── controllers/
 │   ├── v1/
 │   │   ├── authController.ts    // Handles authentication-related APIs
@@ -32,8 +55,8 @@ src/
 │   │   └── validationMiddleware.ts    // Request validation middleware
 ├── models/
 │   ├── bookModel.ts    // Sequelize model for books
-│   ├── index.ts     // Sequelize model index file
-│   ├── tokenModel.ts      // Sequelize model for tokens
+│   ├── index.ts        // Sequelize model index file
+│   ├── tokenModel.ts   // Sequelize model for tokens
 │   └── userModel.ts    // Sequelize model for users
 ├── routes/
 │   ├── v1/
@@ -61,13 +84,14 @@ src/
 │   └── validators/
 │       ├── authValidator.ts     // Validation logic for authentication
 │       └── bookValidators.ts    // Validation logic for books
+├── app.ts     // Main application file
+├── server.ts     // Server entry point
+│
 ├ tests/ (empty dir)
-├ .env_example             // Example environment variables file
+├ env_example             // Example environment variables file
 ├ .sequelizerc             // Sequelize configuration file
 ├ docker-compose.yml       // Docker Compose configuration
-├ Dockerfile               // Dockerfile for containerization
-├ app.ts                   // Main application file
-└ server.ts                // Server entry point
+└  Dockerfile               // Dockerfile for containerization
 ```
 
 ## Installation
@@ -90,8 +114,7 @@ Ensure you have the following installed:
    # or
    yarn install
    ```
-3. Create a `.env` file based on `.env_example` and configure the environment variables.
-
+3. Create a `.env` file based on `env_example` and configure the environment variables.
 4. Run database migrations:
    ```bash
    npx sequelize-cli db:migrate
@@ -102,13 +125,14 @@ Ensure you have the following installed:
    # or
    yarn dev
    ```
-6. Open the API in your browser or API client at [http://localhost:3000](http://localhost:3000).
+6. Open the API in your browser or API client at [http://localhost:8080](http://localhost:8080).
 
 ## Scripts
+- **`npm install`**: Installs dependencies.
+- **`npx sequelize-cli db:migrate`**: Runs database migrations.
 - **`npm run dev`**: Starts the development server with Nodemon.
 - **`npm run build`**: Builds the application for production.
 - **`npm start`**: Starts the production server.
-- **`npx sequelize-cli db:migrate`**: Runs database migrations.
 
 ## Dependencies
 Key dependencies include:
@@ -128,7 +152,7 @@ Key development dependencies include:
 
 ## Configuration
 ### Environment Variables
-The application uses environment variables for configuration. Refer to `.env_example` for the required variables.
+The application uses environment variables for configuration. Refer to `env_example` for the required variables.
 
 ### Database
 The database configuration is managed in `src/config/config.ts`.
